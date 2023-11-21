@@ -3,7 +3,7 @@ const { Readable } = require('stream');
 const fs = require('fs');
 const path = require('path');
 
-// Configure AWS SDK with your credentials and S3 bucket name
+// here configure AWS SDK with the credentials and S3 bucket name
 const s3 = new S3Client({
   region: 'ap-south-1',
   credentials: {
@@ -12,12 +12,11 @@ const s3 = new S3Client({
   },
 });
 
-// Function to upload a file or all files in a directory to S3
+// this function is to upload all files in the directory to s3
 async function uploadFile(localFilePath) {
   const stats = fs.statSync(localFilePath);
 
   if (stats.isDirectory()) {
-    // If localFilePath is a directory, upload all files within the directory
     const files = fs.readdirSync(localFilePath);
 
     const uploadPromises = files.map(async (file) => {
@@ -50,7 +49,7 @@ async function uploadFile(localFilePath) {
   }
 }
 
-// Function to download a file from S3
+// this function is to download files from s3
 async function downloadFile(s3Key, localFilePath) {
   const downloadParams = {
     Bucket: 'assignmentfilemanager',
@@ -69,7 +68,7 @@ async function downloadFile(s3Key, localFilePath) {
   });
 }
 
-// Function to list files in the S3 bucket
+// this function is to list files in the s3 bucket
 async function listFiles() {
   const listParams = {
     Bucket: 'assignmentfilemanager',
@@ -79,19 +78,18 @@ async function listFiles() {
   return data.Contents.map((item) => item.Key);
 }
 
-// Example usage
 async function main() {
   const localFilePath = 'E:\\uploadfile';
 
-  // Upload file or all files in a directory
+  // this is for upload files in a directory
   await uploadFile(localFilePath);
   console.log('File(s) uploaded successfully.');
 
-  // List files
+  // this is for list files
   const files = await listFiles();
   console.log('Files in the S3 bucket:', files);
 
-  // Download file
+  // this is for download the files
   const s3Key = path.basename(localFilePath);
   const downloadedFilePath = 'E:\\uploadfile';
   await downloadFile(s3Key, downloadedFilePath);
